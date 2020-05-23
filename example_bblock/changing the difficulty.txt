@@ -1,0 +1,1 @@
+open bblock.py and change the variable "DIFFICULTY" as the comment suggests
