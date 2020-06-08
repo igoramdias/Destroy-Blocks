@@ -21,14 +21,14 @@ font18 = pygame.font.SysFont("Times New Roman",18)
 font24 = pygame.font.SysFont("Times New Roman",24)
 
 sounds = {
-    "click" : pygame.mixer.Sound("data/click.ogg"),
-    "begin" : pygame.mixer.Sound("data/begin.ogg"),
-    "end"   : pygame.mixer.Sound("data/end.ogg")
+    #"click" : pygame.mixer.Sound("data/click.ogg"),
+    #"begin" : pygame.mixer.Sound("data/begin.ogg"),
+    #"end"   : pygame.mixer.Sound("data/end.ogg")
 }
 
-file = open("data/hs.txt","r")
-high_score = int(file.read().strip())
-file.close()
+#file = open("data/hs.txt","r")
+#high_score = int(file.read().strip())
+#file.close()
 
 class Game(object):
     class Block(object):
@@ -80,7 +80,7 @@ class Game(object):
             self.H = 80
             self.rate = 6
     def get_input(self):
-        global high_score
+        #global high_score
         mouse_buttons = pygame.mouse.get_pressed()
         mouse_position = pygame.mouse.get_pos()
         for event in pygame.event.get():
@@ -93,11 +93,11 @@ class Game(object):
                     for block in self.blocks:
                         if mpos[0] >= block.x and mpos[0] <= block.x+51:
                             if mpos[1] >= block.bottom and mpos[1] <= block.bottom+self.H:
-                                sounds["click"].play()
+                                #sounds["click"].play()
                                 self.blocks.remove(block)
                                 self.score += 1
-                                if self.score > high_score:
-                                    high_score = self.score
+                                '''if self.score > high_score:
+                                    high_score = self.score'''
                                 break
         return True
     def update(self):
@@ -118,34 +118,34 @@ class Game(object):
             block.draw(self)
             
         surface.blit(font12.render("Current: "+str(self.score),True,(0,0,255)),(5,screen_size[1]-20))
-        surface.blit(font12.render("Best: "+str(high_score),True,(0,0,255)),(150,screen_size[1]-20))
+        surface.blit(font12.render("Best: ",True,(0,0,255)),(150,screen_size[1]-20))
         
         pygame.display.flip()
     def run(self):
         while True:
-            if not self.get_input(): return -1
-            if not self.update(): return self.score
+            if not self.get_input(): break 
+            #if not self.update(): return self.score
             self.draw()
             clock.tick(60)
 def get_input():
-    keys_pressed = pygame.key.get_pressed()
+    '''keys_pressed = pygame.key.get_pressed()
     mouse_buttons = pygame.mouse.get_pressed()
     mouse_position = pygame.mouse.get_pos()
-    mouse_rel = pygame.mouse.get_rel()
+    mouse_rel = pygame.mouse.get_rel()'''
     for event in pygame.event.get():
         if   event.type == QUIT: return False
         elif event.type == KEYDOWN:
             if   event.key == K_ESCAPE: return False
 
-            sounds["begin"].play()
+            #sounds["begin"].play()
             game = Game()
-            score = game.run()
-            if score == -1:
-                return False
-            sounds["end"].play()
-            file = open("data/hs.txt","w")
-            file.write(str(high_score))
-            file.close()
+            game.run()
+            '''if score == -1:
+                return False'''
+            #sounds["end"].play()
+            #file = open("data/hs.txt","w")
+            #file.write(str(high_score))
+            #file.close()
     return True
 blink = -30
 def draw():
@@ -158,15 +158,15 @@ def draw():
     blink += 1
     if blink == 30:
         blink = -30
-    surface.blit(font18.render("HIGH SCORE "+str(high_score),True,(255,0,0)),(35,260))
+    surface.blit(font18.render("HIGH SCORE ",True,(255,0,0)),(35,260))
     pygame.display.flip()
 def main():
-    pygame.event.set_grab(True)
+    #pygame.event.set_grab(True)
     while True:
         if not get_input(): break
         draw()
         clock.tick(60)
-    pygame.event.set_grab(False)
+    #pygame.event.set_grab(False)
     pygame.quit()
 if __name__ == "__main__":
     try:
