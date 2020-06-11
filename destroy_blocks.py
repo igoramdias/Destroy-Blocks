@@ -63,55 +63,77 @@ blink = -1*refresh/2
 
 
 blocks_type = deque()
-line_org = [0,0,0,0,0,0,0,0]
+line_org = [0,0,0,0]
+score_1 = 0
+score_2 = 0
+
+class Game():
+    
 
 def movement():
-    for i in range(0,4): line_org[2*i+1] = 1
+    for i in range(0,2): line_org[2*i+1] = 1
     if blocks_type and blocks_type[0][1][1] > height:
         blocks_type.popleft()
     for elem in blocks_type:
         elem[1][1] = elem[1][1] + 1
-        if line_org[2*(elem[2]-1)] > 0 and line_org[2*(elem[2]-1)+1] == 1: 
-            line_org[2*(elem[2]-1)] = line_org[2*(elem[2]-1)] - 1
-            line_org[2*(elem[2]-1)+1] = 0
+        if line_org[2*elem[3]] > 0 and line_org[2*elem[3]+1] == 1: 
+            line_org[2*elem[3]] = line_org[2*elem[3]] - 1
+            line_org[2*elem[3]+1] = 0
         pygame.draw.rect(screen, elem[0], (elem[1][0], elem[1][1], elem[1][2], elem[1][3]))
-    build = random.randrange(2)
-    if build:
-        line = random.randrange(1,5)
-        if line_org[2*(line-1)] == 0:
-            color = random.randrange(2)
-            if color: block = [RED, [75*line,0,50,70], line]
-            else: block = [BLUE, [75*line,0,50,70], line]
-            blocks_type.append(block)
-            line_org[2*(line-1)] = 200
-            pygame.draw.rect(screen, block[0], (block[1][0], block[1][1], block[1][2], block[1][3]))
+    
+    line = random.randrange(1,7)
+    color = random.randrange(2)
+    if line_org[2*color] == 0:
+        if blocks_type and blocks_type[-1][2] == line: return
+        if color: block = [RED, [75*line,0,50,70], line, color]
+        else: block = [BLUE, [75*line,0,50,70], line, color]
+        blocks_type.append(block)
+        line_org[2*color] = 200
+        pygame.draw.rect(screen, block[0], (block[1][0], block[1][1], block[1][2], block[1][3]))
 
+def destroy_iguinho(x, y, player):
+    isRemove = False
+    for elem in blocks_type:
+        if elem[1][0] < x and (elem[1][0] + elem[1][2]) > x:
+            if elem[1][1] < y and (elem[1][1] + elem[1][3]) > y:
+                if player == elem[3] or (player-2) == elem[3]:
+                    isRemove = True
+                    item = elem
+                    break
+    if isRemove: blocks_type.remove(item)
 
+    
+    
 def main():
     player1_x = 50
     player1_y = 440
     player2_x = 50
     player2_y = 500
+    radius = 15
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT: running = False
             if event.type == pygame.K_ESCAPE : running = False
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] and player1_x > 15:
+        if keys[pygame.K_LEFT] and player1_x > radius:
             player1_x -= 1
-        if keys[pygame.K_RIGHT] and player1_x < width - 15:
+        if keys[pygame.K_RIGHT] and player1_x < width - radius:
             player1_x += 1
-        if keys[pygame.K_a] and player2_x > 15:
+        if keys[pygame.K_a] and player2_x > radius:
             player2_x -= 1
-        if keys[pygame.K_d] and player2_x < width - 15:
+        if keys[pygame.K_d] and player2_x < width - radius:
             player2_x += 1
+        if keys[pygame.K_DOWN]:
+            destroy_iguinho(player1_x, player1_y, 1)
+        if keys[pygame.K_s]:
+            destroy_iguinho(player2_x, player2_y, 2)
         screen.fill(background_colour)
         movement()
-        pygame.draw.circle(screen, RED, (player1_x, player1_y), 15)
-        pygame.draw.circle(screen, BLUE, (player2_x, player2_y), 15)
+        pygame.draw.circle(screen, RED, (player1_x, player1_y), radius)
+        pygame.draw.circle(screen, BLUE, (player2_x, player2_y), radius)
         pygame.display.update()
-        clock.tick(120)
+        clock.tick(200)
 if __name__ == "__main__":
     try:
         main()
