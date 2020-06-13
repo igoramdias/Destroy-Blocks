@@ -22,7 +22,7 @@ bg_main = pygame.image.load('main.png')
 (width, height) = (750, 700)
 screen = pygame.display.set_mode((width, height))
 
-# DEfinir nome do jogo
+# Definir nome do jogo
 pygame.display.set_caption("Destroy Blocks")
 
 clock = pygame.time.Clock()
