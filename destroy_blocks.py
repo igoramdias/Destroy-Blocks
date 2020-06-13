@@ -31,6 +31,8 @@ RED = (255,0,0)
 BLACK = (0,0,0)
 BUTTON_PRESSED = (230,194,62)
 BUTTON_NON_PRESSED = (255,235,161)
+
+
     
 class Game():
     def __init__(self, player):
@@ -55,7 +57,7 @@ class Game():
         if self.blocks_type:
             if self.blocks_type[0][1][1] > height-100: self.blocks_type.popleft()
             for elem in self.blocks_type:
-                elem[1][1] = elem[1][1] + 2
+                elem[1][1] = elem[1][1] + 3
                 if self.line_org[2*elem[3]] > 0 and self.line_org[2*elem[3]+1] == 1: 
                     self.line_org[2*elem[3]] = self.line_org[2*elem[3]] - 1
                     self.line_org[2*elem[3]+1] = 0
@@ -115,7 +117,7 @@ class Game():
             if player == 2: 
                 screen.blit(bg_player2, (0, 0))
                 screen.blit(font60.render("{}".format(highest_score),True,(0,0,0)),(690,70))
-                screen.blit(font60.render("{}".format(self.score_1),True,(0,0,0)),(35,195))
+                screen.blit(font60.render("{}".format(self.score_1),True,(0,0,0)),(35,200))
                 screen.blit(font60.render("{}".format(self.score_2),True,(0,0,0)),(35,320))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: running =  False
@@ -125,7 +127,7 @@ class Game():
                 self.player1_x -= 1
             if keys[pygame.K_RIGHT] and self.player1_x < 660 - self.radius:
                 self.player1_x += 1
-            if keys[pygame.K_a] and self.player2_x > 390:
+            if keys[pygame.K_a] and self.player2_x > 105:
                 self.player2_x -= 1
             if keys[pygame.K_d] and self.player2_x < 660 - self.radius:
                 self.player2_x += 1
@@ -140,6 +142,7 @@ class Game():
             pygame.draw.circle(screen, RED, (self.player1_x, self.player1_y), self.radius)
             pygame.draw.circle(screen, BLUE, (self.player2_x, self.player2_y), self.radius)
             pygame.display.update()
+            clock.tick(200)
         return max(self.score_1, self.score_2)
 
 def button(main_org):
