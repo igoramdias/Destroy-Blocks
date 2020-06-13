@@ -141,7 +141,7 @@ class Game:
 
     # Mostrar quanto tempo falta para o fim da partida em formato de um retângulo
     def timer(self, start):
-        y_time = (1 - (self.stop - (pygame.time.get_ticks()-start)) / self.stop) * 200
+        y_time = (1 - (self.stop - (pygame.time.get_ticks() - start)) / self.stop) * 200
         pygame.draw.rect(screen, WHITE, (260, 60, 200, 20))
         pygame.draw.rect(screen, BLACK, (260, 60, y_time, 20))
         # Os 4 valores representam, respectivamente: x da origem, y da origem, comprimento e altura do retângulo
@@ -282,6 +282,7 @@ def button(main_org):
     return True
 
 
+# Desenhar os botões na tela inicial
 def draw(main_org):
     screen.blit(bg_main, (0, 0))  # Background do menu inicial
 
