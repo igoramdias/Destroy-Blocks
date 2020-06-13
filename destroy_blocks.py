@@ -134,12 +134,10 @@ class Game:
             if player == 1:
                 screen.fill((0, 0, 0))
                 screen.blit(background, (0, 0))
-                # screen.blit(bg_player1, (0, 0))
                 screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (255, 255, 255)), (300, 20))
                 screen.blit(font60.render("P: " + "{}".format(self.score_1), True, (255, 0, 0)), (30, 20))
             if player == 2:
                 screen.blit(background, (0, 0))
-                # screen.blit(bg_player2, (0, 0))
                 screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (255, 255, 255)), (300, 20))
                 screen.blit(font60.render("P1: " + "{}".format(self.score_1), True, (255, 0, 0)), (30, 20))
                 screen.blit(font60.render("P2: " + "{}".format(self.score_2), True, (0, 0, 255)), (600, 20))
