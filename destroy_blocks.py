@@ -44,17 +44,18 @@ BUTTON_NON_PRESSED = (255, 235, 161)
 
 
 class Game:
-    def __init__(self, player):
+    def __init__(self, player, time):
         self.blocks_type = deque()
         self.line_org = [0, 0, 0, 0]
         self.score_1 = 0
         self.score_2 = 0
         self.radius = 15
+        self.stop = time*1000*60
         if player == 1:
             self.player1_x = 105
             self.player1_y = 635
-            self.player2_x = 1000
-            self.player2_y = 1000
+            self.player2_x = None
+            self.player2_y = None
         if player == 2:
             self.player1_x = 105
             self.player1_y = 590
@@ -68,7 +69,7 @@ class Game:
             if self.blocks_type[0][1][1] > height - 100:
                 self.blocks_type.popleft()
             for elem in self.blocks_type:
-                elem[1][1] = elem[1][1] + 3
+                elem[1][1] = elem[1][1] + 1
                 if self.line_org[2 * elem[3]] > 0 and self.line_org[2 * elem[3] + 1] == 1:
                     self.line_org[2 * elem[3]] = self.line_org[2 * elem[3]] - 1
                     self.line_org[2 * elem[3] + 1] = 0
@@ -119,24 +120,24 @@ class Game:
         if isRemove:
             self.blocks_type.remove(item)
 
-    def timer(self, stop):
-        y_time = (1 - (stop - pygame.time.get_ticks()) / stop) * 200
+    def timer(self, start):
+        y_time = (1 - (self.stop - (pygame.time.get_ticks()-start)) / self.stop) * 200
         pygame.draw.rect(screen, WHITE, (260, 60, 200, 20))
         pygame.draw.rect(screen, BLACK, (260, 60, y_time, 20))
 
-    def run(self, player, time):
+    def run(self):
         global highest_score
         running = True
-        stop = pygame.time.get_ticks() + time * 1000 * 60
-        while stop > pygame.time.get_ticks() and running:
+        start = pygame.time.get_ticks()
+        while self.stop > (start - pygame.time.get_ticks()) and running:
             screen.fill((0, 0, 0))
             # Background Image
-            if player == 1:
+            if self.player2_x == None:
                 screen.fill((0, 0, 0))
                 screen.blit(background, (0, 0))
                 screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (255, 255, 255)), (300, 20))
                 screen.blit(font60.render("P: " + "{}".format(self.score_1), True, (255, 0, 0)), (30, 20))
-            if player == 2:
+            else:
                 screen.blit(background, (0, 0))
                 screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (255, 255, 255)), (300, 20))
                 screen.blit(font60.render("P1: " + "{}".format(self.score_1), True, (255, 0, 0)), (30, 20))
@@ -151,20 +152,21 @@ class Game:
                 self.player1_x -= 1
             if keys[pygame.K_RIGHT] and self.player1_x < 660 - self.radius:
                 self.player1_x += 1
-            if keys[pygame.K_a] and self.player2_x > 105:
-                self.player2_x -= 1
-            if keys[pygame.K_d] and self.player2_x < 660 - self.radius:
-                self.player2_x += 1
             if keys[pygame.K_DOWN]:
                 self.destroy(self.player1_x, self.player1_y, 1)
-            if keys[pygame.K_s]:
-                self.destroy(self.player2_x, self.player2_y, 2)
             self.to_dodge(self.player1_x, self.player1_y, 1)
-            self.to_dodge(self.player2_x, self.player2_y, 2)
-            self.blocks()
-            self.timer(stop)
             pygame.draw.circle(screen, RED, (self.player1_x, self.player1_y), self.radius)
-            pygame.draw.circle(screen, BLUE, (self.player2_x, self.player2_y), self.radius)
+            if self.player2_x != None:
+                if keys[pygame.K_a] and self.player2_x > 105:
+                    self.player2_x -= 1
+                if keys[pygame.K_d] and self.player2_x < 660 - self.radius:
+                    self.player2_x += 1
+                if keys[pygame.K_s]:
+                    self.destroy(self.player2_x, self.player2_y, 2)
+                self.to_dodge(self.player2_x, self.player2_y, 2)
+                pygame.draw.circle(screen, BLUE, (self.player2_x, self.player2_y), self.radius)
+            self.blocks()
+            self.timer(start)
             pygame.display.update()
             clock.tick(200)
         return max(self.score_1, self.score_2)
@@ -232,8 +234,8 @@ def button(main_org):
                         time = 1
                     else:
                         time = 2
-                    game = Game(player)
-                    score = game.run(player, time)
+                    game = Game(player, time)
+                    score = game.run()
                     if score > highest_score:
                         highest_score = score
     return True
