@@ -25,7 +25,10 @@ screen = pygame.display.set_mode((width, height))
 # Definir nome do jogo
 pygame.display.set_caption("Destroy Blocks")
 
+# Controlar o tempo de jogo e o FPS
 clock = pygame.time.Clock()
+
+# Algumas definições de fontes
 font32 = pygame.font.SysFont("Indie Flower", 32)
 font60 = pygame.font.SysFont("Indie Flower", 60)
 
@@ -66,21 +69,28 @@ class Game:
             self.player2_x = 105
             self.player2_y = 655
 
+    # Geração dos blocos a serem destruídos
     def blocks(self):
         for i in range(0, 2):
             self.line_org[2 * i + 1] = 1
+
         if self.blocks_type:
             if self.blocks_type[0][1][1] > height - 100:
                 self.blocks_type.popleft()
+
             for elem in self.blocks_type:
                 elem[1][1] = elem[1][1] + 1
+
                 if self.line_org[2 * elem[3]] > 0 and self.line_org[2 * elem[3] + 1] == 1:
                     self.line_org[2 * elem[3]] = self.line_org[2 * elem[3]] - 1
                     self.line_org[2 * elem[3] + 1] = 0
+
                 pygame.draw.rect(screen, elem[0], (elem[1][0], elem[1][1], elem[1][2], elem[1][3]))
 
-        line = random.randrange(1, 7)
-        color = random.randrange(2)
+        line = random.randrange(1, 7)  # Escolher randomicamente uma das 6 colunas onde surgem os blocos
+        color = random.randrange(2)  # Escolher randomicamente cor Azul ou Vermelha para o bloco
+
+        # Impedir sobreposição de blocos
         if self.line_org[2 * color] == 0:
             if self.blocks_type and self.blocks_type[-1][2] == line:
                 return
@@ -88,18 +98,21 @@ class Game:
                 block = [RED, [115 + 95 * (line - 1), 0, 45, 70], line, color]
             else:
                 block = [BLUE, [115 + 95 * (line - 1), 0, 45, 70], line, color]
+
             self.blocks_type.append(block)
             self.line_org[2 * color] = 100
             pygame.draw.rect(screen, block[0], (block[1][0], block[1][1], block[1][2], block[1][3]))
 
+    # Destruir blocos de o centro (x, y) do player estiver na região delimitada pelo bloco
     def destroy(self, x, y, player):
         isRemove = False
         for elem in self.blocks_type:
             if elem[1][0] < x < (elem[1][0] + elem[1][2]):
                 if elem[1][1] < y < (elem[1][1] + elem[1][3]):
                     if player == elem[3] or (player - 2) == elem[3]:
-                        isRemove = True
+                        isRemove = True  # Se atender as condições, remove o bloco
                         item = elem
+                        # Aumentar a pontuação
                         if player == 1:
                             self.score_1 = self.score_1 + 1
                         if player == 2:
@@ -108,6 +121,7 @@ class Game:
         if isRemove:
             self.blocks_type.remove(item)
 
+    # Semelhante as destroy, mas aqui perde ponto caso atinga o bloco da cor errada
     def to_dodge(self, x, y, player):
         isRemove = False
         for elem in self.blocks_type:
@@ -116,6 +130,7 @@ class Game:
                     if not (player == elem[3] or (player - 2) == elem[3]):
                         isRemove = True
                         item = elem
+                        # Desconta pontuação
                         if player == 1:
                             self.score_1 = self.score_1 - 1
                         if player == 2:
@@ -124,16 +139,18 @@ class Game:
         if isRemove:
             self.blocks_type.remove(item)
 
+    # Mostrar quanto tempo falta para o fim da partida em formato de um retângulo
     def timer(self, start):
         y_time = (1 - (self.stop - (pygame.time.get_ticks()-start)) / self.stop) * 200
         pygame.draw.rect(screen, WHITE, (260, 60, 200, 20))
         pygame.draw.rect(screen, BLACK, (260, 60, y_time, 20))
+        # Os 4 valores representam, respectivamente: x da origem, y da origem, comprimento e altura do retângulo
 
     def run(self):
         global highest_score
         running = True
         start = pygame.time.get_ticks()
-        while self.stop > (start - pygame.time.get_ticks()) and running:
+        while self.stop > (pygame.time.get_ticks() - start) and running:
             screen.fill((0, 0, 0))
             screen.blit(background, (0, 0))
             screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (255, 255, 255)), (300, 20))
@@ -144,36 +161,51 @@ class Game:
             else:
                 screen.blit(font60.render("P1: " + "{}".format(self.score_1), True, (255, 0, 0)), (30, 20))
                 screen.blit(font60.render("P2: " + "{}".format(self.score_2), True, (0, 0, 255)), (600, 20))
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                if event.type == pygame.K_ESCAPE:
-                    running = False
+
             keys = pygame.key.get_pressed()
+
+            # Pegar informações do teclado para moviemwntar o player 1
+            # Mover player 1 para a esquerda
             if keys[pygame.K_LEFT] and self.player1_x > 105:
                 self.player1_x -= 1
+            # Mover player 1 para a direita
             if keys[pygame.K_RIGHT] and self.player1_x < 660 - self.radius:
                 self.player1_x += 1
+            # Destruir bloco vermelho
             if keys[pygame.K_DOWN]:
                 self.destroy(self.player1_x, self.player1_y, 1)
+
             self.to_dodge(self.player1_x, self.player1_y, 1)
             pygame.draw.circle(screen, RED, (self.player1_x, self.player1_y), self.radius)
+
+            # Pegar informações do teclado para moviemwntar o player 2
             if self.player2_x is not None:
+                # Mover player 2 para a esquerda
                 if keys[pygame.K_a] and self.player2_x > 105:
                     self.player2_x -= 1
+                # Mover player 2 para a direita
                 if keys[pygame.K_d] and self.player2_x < 660 - self.radius:
                     self.player2_x += 1
+                # Destruir bloco azul
                 if keys[pygame.K_s]:
                     self.destroy(self.player2_x, self.player2_y, 2)
+
                 self.to_dodge(self.player2_x, self.player2_y, 2)
                 pygame.draw.circle(screen, BLUE, (self.player2_x, self.player2_y), self.radius)
+
             self.blocks()
             self.timer(start)
             pygame.display.update()
-            clock.tick(200)
-        return max(self.score_1, self.score_2)
+            clock.tick(200)  # Controla a velocidade do jogo
+
+        return max(self.score_1, self.score_2)  # Retorna o maior score da partida
 
 
+# Definir botões na tela inicial para configurar o jogo (jogadores e tempo de jogo)
 def button(main_org):
     global highest_score
     mouse = pygame.mouse.get_pos()  # Determinar onde está o cursor do mouse
@@ -182,8 +214,6 @@ def button(main_org):
     # Explorar cada evento no mouse ou no teclado
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            return False
-        if event.type == pygame.K_ESCAPE:
             return False
 
         # Detectar se o cursor do mouse está dentro das regiões onde ficam os botões e executar ações quando clicar
