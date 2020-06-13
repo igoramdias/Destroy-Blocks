@@ -7,29 +7,34 @@ import random
 
 os.chdir(os.path.dirname(__file__))
 
+# Centralizar o jogo na tela do computador
 if sys.platform in ["win32", "win64"]:
     os.environ["SDL_VIDEO_CENTERED"] = "1"
 
+# Inicializar PyGame
 pygame.init()
 
 # Definir janela que ocorrerá o jogo
 background = pygame.image.load('8320.png')
 bg_main = pygame.image.load('main.png')
-bg_player1 = pygame.image.load('gamerun1.png')
-bg_player2 = pygame.image.load('gamerun2.png')
-(width, height) = (750, 700)
 
+# Definir largura e comprimento da tela do jogo
+(width, height) = (750, 700)
 screen = pygame.display.set_mode((width, height))
+
+# DEfinir nome do jogo
 pygame.display.set_caption("Destroy Blocks")
 
 clock = pygame.time.Clock()
 font32 = pygame.font.SysFont("Indie Flower", 32)
 font60 = pygame.font.SysFont("Indie Flower", 60)
 
+# Arquivo para guardar o Highest Score
 file = open("hs.txt", "r")
 highest_score = int(file.read().strip())
 file.close()
 
+# Algumas definições de cores
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
