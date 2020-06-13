@@ -1,20 +1,20 @@
 import os
-import sys
 import pygame
+import random
+import sys
 import traceback
 from collections import deque
-import random
 
 os.chdir(os.path.dirname(__file__))
 
-# Centralizar o jogo na tela do computador
+# Centralizar a janela do jogo na tela do computador
 if sys.platform in ["win32", "win64"]:
     os.environ["SDL_VIDEO_CENTERED"] = "1"
 
 # Inicializar PyGame
 pygame.init()
 
-# Definir janela que ocorrerá o jogo
+# Definir backgrounds do jogo
 bg_main = pygame.image.load('main.png')  # Menu
 background = pygame.image.load('8320.png')  # Jogo
 
@@ -50,6 +50,9 @@ class Game:
     def __init__(self, player, time):
         self.blocks_type = deque()
         self.line_org = [0, 0, 0, 0]
+        # Posição 0: Relacionado com a cor vermelha
+        # Posição 2: Relacionado com a cor azul
+
         self.score_1 = 0
         self.score_2 = 0
         self.radius = 15
@@ -99,11 +102,11 @@ class Game:
             else:
                 block = [BLUE, [115 + 95 * (line - 1), 0, 45, 70], line, color]
 
-            self.blocks_type.append(block)
+            self.blocks_type.append(block)  # Insere o bloco na fila
             self.line_org[2 * color] = 100
-            pygame.draw.rect(screen, block[0], (block[1][0], block[1][1], block[1][2], block[1][3]))
+            pygame.draw.rect(screen, block[0], (block[1][0], block[1][1], block[1][2], block[1][3]))  # Criação do bloco
 
-    # Destruir blocos de o centro (x, y) do player estiver na região delimitada pelo bloco
+    # Destruir blocos se o centro (x, y) do player estiver na região delimitada pelo bloco
     def destroy(self, x, y, player):
         isRemove = False
         for elem in self.blocks_type:
@@ -141,34 +144,37 @@ class Game:
 
     # Mostrar quanto tempo falta para o fim da partida em formato de um retângulo
     def timer(self, start):
-        y_time = (1 - (self.stop - (pygame.time.get_ticks() - start)) / self.stop) * 200
+        y_time = (1 - (self.stop - (pygame.time.get_ticks() - start)) / self.stop) * 200  # Tempo restante
         pygame.draw.rect(screen, WHITE, (260, 60, 200, 20))
         pygame.draw.rect(screen, BLACK, (260, 60, y_time, 20))
         # Os 4 valores representam, respectivamente: x da origem, y da origem, comprimento e altura do retângulo
 
     def run(self):
-        global highest_score
+        global highest_score  # Variável para armazenar a maior pontuação
         running = True
         start = pygame.time.get_ticks()
+
+        # Loop enquanto estiver jogando
         while self.stop > (pygame.time.get_ticks() - start) and running:
             screen.fill((0, 0, 0))
             screen.blit(background, (0, 0))
             screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (255, 255, 255)), (300, 20))
 
-            # Background Image
+            # Texto na tela para cada caso (1 ou 2 jogadores)
             if self.player2_x is None:
                 screen.blit(font60.render("P: " + "{}".format(self.score_1), True, (255, 0, 0)), (30, 20))
             else:
                 screen.blit(font60.render("P1: " + "{}".format(self.score_1), True, (255, 0, 0)), (30, 20))
                 screen.blit(font60.render("P2: " + "{}".format(self.score_2), True, (0, 0, 255)), (600, 20))
 
+            # Sair da partida se pressionar o X no canto superior direito
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
 
             keys = pygame.key.get_pressed()
 
-            # Pegar informações do teclado para moviemwntar o player 1
+            # Pegar informações do teclado para movimentar o player 1
             # Mover player 1 para a esquerda
             if keys[pygame.K_LEFT] and self.player1_x > 105:
                 self.player1_x -= 1
@@ -182,7 +188,7 @@ class Game:
             self.to_dodge(self.player1_x, self.player1_y, 1)
             pygame.draw.circle(screen, RED, (self.player1_x, self.player1_y), self.radius)
 
-            # Pegar informações do teclado para moviemwntar o player 2
+            # Pegar informações do teclado para movimentar o player 2
             if self.player2_x is not None:
                 # Mover player 2 para a esquerda
                 if keys[pygame.K_a] and self.player2_x > 105:
@@ -207,7 +213,7 @@ class Game:
 
 # Definir botões na tela inicial para configurar o jogo (jogadores e tempo de jogo)
 def button(main_org):
-    global highest_score
+    global highest_score  # Variável para armazenar a maior pontuação
     mouse = pygame.mouse.get_pos()  # Determinar onde está o cursor do mouse
     click = pygame.mouse.get_pressed()  # Saber se houve click do mouse
 
@@ -238,6 +244,7 @@ def button(main_org):
                         main_org[0] = 0
                         main_org[1] = 0
                         break
+
         if 565 + 60 > mouse[0] > 565:
             if 320 + 60 > mouse[1] > 320:
                 if click[0] == 1:
@@ -289,7 +296,7 @@ def draw(main_org):
     # Escrever o Highest Score na tela inicial
     screen.blit(font32.render("HIGHEST SCORE   {}".format(highest_score), True, (0, 0, 0)), (150, 620))
 
-    # Colocar os botões na tela inicial
+    # Colocar os botões na tela inicial, alterando cores quando selecionados
     if main_org[1] == 1:
         if main_org[0] == 1:
             pygame.draw.circle(screen, BUTTON_PRESSED, (245, 350), 30)
@@ -314,17 +321,22 @@ def draw(main_org):
         pygame.draw.circle(screen, BUTTON_NON_PRESSED, (595, 350), 30)
         pygame.draw.circle(screen, BUTTON_NON_PRESSED, (595, 430), 30)
 
-    pygame.display.update()  # Atualizar a tela sempre que escrever algo
+    pygame.display.update()  # Atualizar a tela
     pygame.display.flip()
 
 
 def main():
-    main_org = [0, 0, 0, 0]  # Organizar a página inicial
+    main_org = [0, 0, 0, 0]
+    # Posição 0: Se for 1, será 1 jogador. Se for 2, serão 2 jogadores
+    # Posição 1: indica se o botão de seleção de quantidade de jogadores está apertado
+    # Posição 1: Se for 1, será 1 min.Se for 2, serão 2 min
+    # Posição 3: indica se o botão de seleção de tempo de jogo está apertado
+
     while True:
         if not button(main_org):
             break
 
-        # Atualizar valor do Highest Score
+        # Atualizar valor do Highest Score no arquivo .txt
         file = open("hs.txt", "w")
         file.write(str(highest_score))
         file.close()
