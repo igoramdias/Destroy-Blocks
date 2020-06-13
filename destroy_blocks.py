@@ -15,8 +15,8 @@ if sys.platform in ["win32", "win64"]:
 pygame.init()
 
 # Definir janela que ocorrerá o jogo
-background = pygame.image.load('8320.png')
-bg_main = pygame.image.load('main.png')
+bg_main = pygame.image.load('main.png')  # Menu
+background = pygame.image.load('8320.png')  # Jogo
 
 # Definir largura e comprimento da tela do jogo
 (width, height) = (750, 700)
@@ -29,7 +29,7 @@ clock = pygame.time.Clock()
 font32 = pygame.font.SysFont("Indie Flower", 32)
 font60 = pygame.font.SysFont("Indie Flower", 60)
 
-# Arquivo para guardar o Highest Score
+# Arquivo .txt para guardar o Highest Score
 file = open("hs.txt", "r")
 highest_score = int(file.read().strip())
 file.close()
@@ -131,6 +131,7 @@ class Game:
         start = pygame.time.get_ticks()
         while self.stop > (start - pygame.time.get_ticks()) and running:
             screen.fill((0, 0, 0))
+
             # Background Image
             if self.player2_x == None:
                 screen.fill((0, 0, 0))
@@ -174,13 +175,17 @@ class Game:
 
 def button(main_org):
     global highest_score
-    mouse = pygame.mouse.get_pos()
-    click = pygame.mouse.get_pressed()
+    mouse = pygame.mouse.get_pos()  # Determinar onde está o cursor do mouse
+    click = pygame.mouse.get_pressed()  # Saber se houve click do mouse
+
+    # Explorar cada evento no mouse ou no teclado
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return False
         if event.type == pygame.K_ESCAPE:
             return False
+
+        # Detectar se o cursor do mouse está dentro das regiões onde ficam os botões e executar ações quando clicar
         if 215 + 60 > mouse[0] > 215:
             if 320 + 60 > mouse[1] > 320:
                 if click[0] == 1:
@@ -223,6 +228,8 @@ def button(main_org):
                         main_org[2] = 0
                         main_org[3] = 0
                         break
+
+        # Botão GO!: Dar início ao jogo se as opções de jogadores e tempo tiverem sido escolhidas
         if main_org[1] == 1 and main_org[3] == 1:
             if 345 + 60 > mouse[0] > 345 and 595 + 60 > mouse[1] > 535:
                 if click[0] == 1:
@@ -242,8 +249,11 @@ def button(main_org):
 
 
 def draw(main_org):
-    screen.blit(bg_main, (0, 0))
+    screen.blit(bg_main, (0, 0))  # Background do menu inicial
+    # Escrever o Highest Score na tela inicial
     screen.blit(font32.render("HIGHEST SCORE   {}".format(highest_score), True, (0, 0, 0)), (150, 620))
+
+    # Colocar os botões na tela inicial
     if main_org[1] == 1:
         if main_org[0] == 1:
             pygame.draw.circle(screen, BUTTON_PRESSED, (245, 350), 30)
@@ -251,9 +261,11 @@ def draw(main_org):
         if main_org[0] == 2:
             pygame.draw.circle(screen, BUTTON_NON_PRESSED, (245, 350), 30)
             pygame.draw.circle(screen, BUTTON_PRESSED, (245, 430), 30)
+
     if main_org[1] == 0:
         pygame.draw.circle(screen, BUTTON_NON_PRESSED, (245, 350), 30)
         pygame.draw.circle(screen, BUTTON_NON_PRESSED, (245, 430), 30)
+
     if main_org[3] == 1:
         if main_org[2] == 1:
             pygame.draw.circle(screen, BUTTON_PRESSED, (595, 350), 30)
@@ -261,19 +273,22 @@ def draw(main_org):
         if main_org[2] == 2:
             pygame.draw.circle(screen, BUTTON_NON_PRESSED, (595, 350), 30)
             pygame.draw.circle(screen, BUTTON_PRESSED, (595, 430), 30)
+
     if main_org[3] == 0:
         pygame.draw.circle(screen, BUTTON_NON_PRESSED, (595, 350), 30)
         pygame.draw.circle(screen, BUTTON_NON_PRESSED, (595, 430), 30)
-    pygame.display.update()
+
+    pygame.display.update()  # Atualizar a tela sempre que escrever algo
     pygame.display.flip()
 
 
 def main():
-    main_org = [0, 0, 0, 0]
+    main_org = [0, 0, 0, 0]  # Organizar a página inicial
     while True:
         if not button(main_org):
             break
 
+        # Atualizar valor do Highest Score
         file = open("hs.txt", "w")
         file.write(str(highest_score))
         file.close()
