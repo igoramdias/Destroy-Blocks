@@ -50,12 +50,16 @@ class Game:
         self.score_1 = 0
         self.score_2 = 0
         self.radius = 15
-        self.stop = time*1000*60
+        self.stop = time * 1000 * 60
+
+        # Inicialização para 1 jogador
         if player == 1:
             self.player1_x = 105
             self.player1_y = 635
             self.player2_x = None
             self.player2_y = None
+
+        # Inicialização para 2 jogadores
         if player == 2:
             self.player1_x = 105
             self.player1_y = 590
@@ -131,16 +135,13 @@ class Game:
         start = pygame.time.get_ticks()
         while self.stop > (start - pygame.time.get_ticks()) and running:
             screen.fill((0, 0, 0))
+            screen.blit(background, (0, 0))
+            screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (255, 255, 255)), (300, 20))
 
             # Background Image
-            if self.player2_x == None:
-                screen.fill((0, 0, 0))
-                screen.blit(background, (0, 0))
-                screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (255, 255, 255)), (300, 20))
+            if self.player2_x is None:
                 screen.blit(font60.render("P: " + "{}".format(self.score_1), True, (255, 0, 0)), (30, 20))
             else:
-                screen.blit(background, (0, 0))
-                screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (255, 255, 255)), (300, 20))
                 screen.blit(font60.render("P1: " + "{}".format(self.score_1), True, (255, 0, 0)), (30, 20))
                 screen.blit(font60.render("P2: " + "{}".format(self.score_2), True, (0, 0, 255)), (600, 20))
             for event in pygame.event.get():
@@ -157,7 +158,7 @@ class Game:
                 self.destroy(self.player1_x, self.player1_y, 1)
             self.to_dodge(self.player1_x, self.player1_y, 1)
             pygame.draw.circle(screen, RED, (self.player1_x, self.player1_y), self.radius)
-            if self.player2_x != None:
+            if self.player2_x is not None:
                 if keys[pygame.K_a] and self.player2_x > 105:
                     self.player2_x -= 1
                 if keys[pygame.K_d] and self.player2_x < 660 - self.radius:
@@ -241,8 +242,11 @@ def button(main_org):
                         time = 1
                     else:
                         time = 2
+
                     game = Game(player, time)
                     score = game.run()
+
+                    # Atualizar a nova pontuação máxima
                     if score > highest_score:
                         highest_score = score
     return True
@@ -250,6 +254,7 @@ def button(main_org):
 
 def draw(main_org):
     screen.blit(bg_main, (0, 0))  # Background do menu inicial
+
     # Escrever o Highest Score na tela inicial
     screen.blit(font32.render("HIGHEST SCORE   {}".format(highest_score), True, (0, 0, 0)), (150, 620))
 
