@@ -16,8 +16,10 @@ pygame.init()
 
 # Definir backgrounds do jogo
 bg_main = pygame.image.load('main.png')  # Menu
-background1 = pygame.image.load('gamerun1.png')  # Background 1 player
-background2 = pygame.image.load('gamerun2.png')  # Background 2 players
+background = pygame.image.load('gamerun.png')  # Background
+fim1 = pygame.image.load('telafinal1.png')  # Tela final 1 player
+fim2V = pygame.image.load('telafinal2V.png')  # Tela final player red win
+fim2A = pygame.image.load('telafinal2A.png')  # Tela final player blue win
 
 # Definindo objetos do jogo
 nave1 = pygame.image.load('naveVermelha.png')  # Nave player 1
@@ -63,7 +65,7 @@ class Game:
         self.score_1 = 0
         self.score_2 = 0
         self.radius = 15
-        self.stop = time * 1000 * 60
+        self.stop = time * 1000 * 10
 
         # Inicialização para 1 jogador
         if player == 1:
@@ -85,41 +87,45 @@ class Game:
             self.line_org[2 * i + 1] = 1
 
         if self.blocks_type:
-            if self.blocks_type[0][1][1] > height - 100:
+            if self.blocks_type[0][0][1] > height - 100:
                 self.blocks_type.popleft()
 
             for elem in self.blocks_type:
-                elem[1][1] = elem[1][1] + 1
+                elem[0][1] = elem[0][1] + 1
 
-                if self.line_org[2 * elem[3]] > 0 and self.line_org[2 * elem[3] + 1] == 1:
-                    self.line_org[2 * elem[3]] = self.line_org[2 * elem[3]] - 1
-                    self.line_org[2 * elem[3] + 1] = 0
+                if self.line_org[2 * elem[2]] > 0 and self.line_org[2 * elem[2] + 1] == 1:
+                    self.line_org[2 * elem[2]] = self.line_org[2 * elem[2]] - 1
+                    self.line_org[2 * elem[2] + 1] = 0
 
-                pygame.draw.rect(screen, elem[0], (elem[1][0], elem[1][1], elem[1][2], elem[1][3]))
+                if elem[2]:
+                    screen.blit(bloco1, (elem[0][0], elem[0][1]))
+                else:
+                    screen.blit(bloco2, (elem[0][0], elem[0][1]))
 
         line = random.randrange(1, 7)  # Escolher randomicamente uma das 6 colunas onde surgem os blocos
         color = random.randrange(2)  # Escolher randomicamente cor Azul ou Vermelha para o bloco
 
         # Impedir sobreposição de blocos
         if self.line_org[2 * color] == 0:
-            if self.blocks_type and self.blocks_type[-1][2] == line:
+            if self.blocks_type and self.blocks_type[-1][1] == line:
                 return
             if color:
-                block = [RED, [115 + 95 * (line - 1), 0, 45, 70], line, color]
+                block = [[115 + 95 * (line - 1), 0, 45, 70], line, color]
+                screen.blit(bloco1, (115 + 95 * (line - 1), 0))
             else:
-                block = [BLUE, [115 + 95 * (line - 1), 0, 45, 70], line, color]
+                block = [[115 + 95 * (line - 1), 0, 45, 70], line, color]
+                screen.blit(bloco2, (115 + 95 * (line - 1), 0))
 
             self.blocks_type.append(block)  # Insere o bloco na fila
             self.line_org[2 * color] = 100
-            pygame.draw.rect(screen, block[0], (block[1][0], block[1][1], block[1][2], block[1][3]))  # Criação do bloco
 
     # Destruir blocos se o centro (x, y) do player estiver na região delimitada pelo bloco
     def destroy(self, x, y, player):
         isRemove = False
         for elem in self.blocks_type:
-            if elem[1][0] < x < (elem[1][0] + elem[1][2]):
-                if elem[1][1] < y < (elem[1][1] + elem[1][3]):
-                    if player == elem[3] or (player - 2) == elem[3]:
+            if elem[0][0] < x < (elem[0][0] + 45):
+                if elem[0][1] < y < (elem[0][1] + 70):
+                    if player == elem[2] or (player - 2) == elem[2]:
                         isRemove = True  # Se atender as condições, remove o bloco
                         item = elem
                         # Aumentar a pontuação
@@ -135,9 +141,9 @@ class Game:
     def to_dodge(self, x, y, player):
         isRemove = False
         for elem in self.blocks_type:
-            if elem[1][0] < x < (elem[1][0] + elem[1][2]):
-                if elem[1][1] < y < (elem[1][1] + elem[1][3]):
-                    if not (player == elem[3] or (player - 2) == elem[3]):
+            if elem[0][0] < x < (elem[0][0] + elem[0][2]):
+                if elem[0][1] < y < (elem[0][1] + elem[0][3]):
+                    if not (player == elem[2] or (player - 2) == elem[2]):
                         isRemove = True
                         item = elem
                         # Desconta pontuação
@@ -167,11 +173,11 @@ class Game:
 
             # Texto na tela para cada caso (1 ou 2 jogadores)
             if self.player2_x is None:
-                screen.blit(background1, (0, 0))
+                screen.blit(background, (0, 0))
                 screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (0, 0, 0)), (300, 20))
                 screen.blit(font60.render("P: " + "{}".format(self.score_1), True, (255, 0, 0)), (5, 10))
             else:
-                screen.blit(background2, (0, 0))
+                screen.blit(background, (0, 0))
                 screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (0, 0, 0)), (300, 20))
                 screen.blit(font60.render("P1: " + "{}".format(self.score_1), True, (255, 0, 0)), (5, 10))
                 screen.blit(font60.render("P2: " + "{}".format(self.score_2), True, (0, 0, 255)), (600, 10))
@@ -195,8 +201,7 @@ class Game:
                 self.destroy(self.player1_x, self.player1_y, 1)
 
             self.to_dodge(self.player1_x, self.player1_y, 1)
-            pygame.draw.circle(screen, RED, (self.player1_x, self.player1_y), self.radius)
-            # screen.blit(nave1, (self.player1_x, self.player1_y))
+            screen.blit(nave1, (self.player1_x, self.player1_y))
 
             # Pegar informações do teclado para movimentar o player 2
             if self.player2_x is not None:
@@ -211,8 +216,7 @@ class Game:
                     self.destroy(self.player2_x, self.player2_y, 2)
 
                 self.to_dodge(self.player2_x, self.player2_y, 2)
-                pygame.draw.circle(screen, BLUE, (self.player2_x, self.player2_y), self.radius)
-                # screen.blit(nave2, (self.player1_x, self.player1_y))
+                screen.blit(nave2, (self.player2_x, self.player2_y))
 
             self.blocks()
             self.timer(start)
@@ -297,6 +301,20 @@ def button(main_org):
                     # Atualizar a nova pontuação máxima
                     if score > highest_score:
                         highest_score = score
+
+                    while pygame.time.get_ticks() - game.stop < 10000:
+                        # Atualizar a tela
+                        pygame.display.update()
+
+                        if game.score_2 == 0:
+                            screen.blit(fim1, (0, 0))
+                        elif game.score_1 > game.score_2:
+                            screen.blit(fim2V, (0, 0))
+                        else:
+                            screen.blit(fim2A, (0, 0))
+
+
+
     return True
 
 
