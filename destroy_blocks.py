@@ -86,7 +86,7 @@ class Game:
             self.player2_x = 105
             self.player2_y = 635
 
-    # Geração dos blocos a serem destruídos
+    # Geração dos cometas a serem destruídos
     def blocks(self):
         for i in range(0, 2):
             self.line_org[2 * i + 1] = 1
@@ -108,9 +108,9 @@ class Game:
                     screen.blit(bloco2, (elem[0][0], elem[0][1]))
 
         line = random.randrange(1, 7)  # Escolher randomicamente uma das 6 colunas onde surgem os blocos
-        color = random.randrange(2)  # Escolher randomicamente cor Azul ou Vermelha para o bloco
+        color = random.randrange(2)  # Escolher randomicamente cor Azul ou Vermelha para o cometa
 
-        # Impedir sobreposição de blocos
+        # Impedir sobreposição de cometas
         if self.line_org[2 * color] == 0:
             if self.blocks_type and self.blocks_type[-1][1] == line:
                 return
@@ -124,14 +124,14 @@ class Game:
             self.blocks_type.append(block)  # Insere o bloco na fila
             self.line_org[2 * color] = 200
 
-    # Destruir blocos se o centro (x, y) do player estiver na região delimitada pelo bloco
+    # Destruir blocos se o centro (x, y) do player estiver na região delimitada pelo cometa
     def destroy(self, x, y, player):
         isRemove = False
         for elem in self.blocks_type:
             if elem[0][0] < x < (elem[0][0] + elem[0][2]):
                 if elem[0][1] < y < (elem[0][1] + elem[0][3]):
                     if player == elem[2] or (player - 2) == elem[2]:
-                        isRemove = True  # Se atender as condições, remove o bloco
+                        isRemove = True  # Se atender as condições, remove o cometa
                         item = elem
                         # Aumentar a pontuação
                         if player == 1:
@@ -144,7 +144,7 @@ class Game:
             pygame.display.update()
             self.blocks_type.remove(item)
 
-    # Semelhante as destroy, mas aqui perde ponto caso atinga o bloco da cor errada
+    # Semelhante as destroy, mas aqui perde ponto caso atinga o cometa da cor errada
     def to_dodge(self, x, y, player):
         isRemove = False
         for elem in self.blocks_type:
@@ -199,13 +199,14 @@ class Game:
             keys = pygame.key.get_pressed()
 
             # Pegar informações do teclado para movimentar o player 1
+
             # Mover player 1 para a esquerda
             if keys[pygame.K_LEFT] and self.player1_x > 105:
                 self.player1_x -= 2
             # Mover player 1 para a direita
             if keys[pygame.K_RIGHT] and self.player1_x < 660:
                 self.player1_x += 2
-            # Destruir bloco vermelho
+            # Destruir cometa vermelho
             if keys[pygame.K_DOWN]:
                 self.destroy(self.player1_x + 32, self.player1_y + 32, 1)
 
@@ -220,7 +221,7 @@ class Game:
                 # Mover player 2 para a direita
                 if keys[pygame.K_d] and self.player2_x < 660:
                     self.player2_x += 2
-                # Destruir bloco azul
+                # Destruir cometa azul
                 if keys[pygame.K_s]:
                     self.destroy(self.player2_x + 32, self.player2_y + 32, 2)
 
