@@ -15,27 +15,27 @@ os.environ["SDL_VIDEO_CENTERED"] = "1"
 pygame.init()
 
 # Definir backgrounds do jogo
-bg_main = pygame.image.load('main.png')  # Menu
-background = pygame.image.load('gamerun.png')  # Background
-fim1 = pygame.image.load('telafinal1.png')  # Tela final 1 player
-fim2V = pygame.image.load('telafinal2V.png')  # Tela final player red win
-fim2A = pygame.image.load('telafinal2A.png')  # Tela final player blue win
-pause = pygame.image.load('telapause.png')  # Tela de pausa
-spark = pygame.image.load('spark.png')  # Imagem de quando colide
-sos = pygame.image.load('ajuda.png')  # Tela de ajuda
+bg_main = pygame.image.load('Imagens/main.png')  # Menu
+background = pygame.image.load('Imagens/gamerun.png')  # Background
+fim1 = pygame.image.load('Imagens/telafinal1.png')  # Tela final 1 player
+fim2V = pygame.image.load('Imagens/telafinal2V.png')  # Tela final player red win
+fim2A = pygame.image.load('Imagens/telafinal2A.png')  # Tela final player blue win
+pause = pygame.image.load('Imagens/telapause.png')  # Tela de pausa
+spark = pygame.image.load('Imagens/spark.png')  # Imagem de quando colide
+sos = pygame.image.load('Imagens/ajuda.png')  # Tela de ajuda
 
 # Definindo objetos do jogo
-nave1 = pygame.image.load('naveVermelha.png')  # Nave player 1
-nave2 = pygame.image.load('naveAzul.png')  # Nave player 2
-bloco1 = pygame.image.load('cometaVermelho.png')  # Cometa vermelho
-bloco2 = pygame.image.load('cometaAzul.png')  # Cometa azul
+nave1 = pygame.image.load('Imagens/naveVermelha.png')  # Nave player 1
+nave2 = pygame.image.load('Imagens/naveAzul.png')  # Nave player 2
+bloco1 = pygame.image.load('Imagens/cometaVermelho.png')  # Cometa vermelho
+bloco2 = pygame.image.load('Imagens/cometaAzul.png')  # Cometa azul
 
 # Definir largura e comprimento da tela do jogo
 (width, height) = (750, 700)
 screen = pygame.display.set_mode((width, height))
 
 # Definir nome do jogo
-pygame.display.set_caption("Destroy Blocks")
+pygame.display.set_caption("Destroy Comets")
 
 # Controlar o tempo de jogo e o FPS
 clock = pygame.time.Clock()
@@ -86,7 +86,7 @@ class Game:
             self.player2_x = 105
             self.player2_y = 635
 
-    # Geração dos blocos a serem destruídos
+    # Geração dos cometas a serem destruídos
     def blocks(self):
         for i in range(0, 2):
             self.line_org[2 * i + 1] = 1
@@ -96,7 +96,7 @@ class Game:
                 self.blocks_type.popleft()
 
             for elem in self.blocks_type:
-                elem[0][1] = elem[0][1] + self.diff * 2
+                elem[0][1] = elem[0][1] + self.diff * 1
 
                 if self.line_org[2 * elem[2]] > 0 and self.line_org[2 * elem[2] + 1] == 1:
                     self.line_org[2 * elem[2]] = self.line_org[2 * elem[2]] - self.diff * 2
@@ -108,9 +108,9 @@ class Game:
                     screen.blit(bloco2, (elem[0][0], elem[0][1]))
 
         line = random.randrange(1, 7)  # Escolher randomicamente uma das 6 colunas onde surgem os blocos
-        color = random.randrange(2)  # Escolher randomicamente cor Azul ou Vermelha para o bloco
+        color = random.randrange(2)  # Escolher randomicamente cor Azul ou Vermelha para o cometa
 
-        # Impedir sobreposição de blocos
+        # Impedir sobreposição de cometas
         if self.line_org[2 * color] == 0:
             if self.blocks_type and self.blocks_type[-1][1] == line:
                 return
@@ -124,14 +124,14 @@ class Game:
             self.blocks_type.append(block)  # Insere o bloco na fila
             self.line_org[2 * color] = 200
 
-    # Destruir blocos se o centro (x, y) do player estiver na região delimitada pelo bloco
+    # Destruir blocos se o centro (x, y) do player estiver na região delimitada pelo cometa
     def destroy(self, x, y, player):
         isRemove = False
         for elem in self.blocks_type:
             if elem[0][0] < x < (elem[0][0] + elem[0][2]):
                 if elem[0][1] < y < (elem[0][1] + elem[0][3]):
                     if player == elem[2] or (player - 2) == elem[2]:
-                        isRemove = True  # Se atender as condições, remove o bloco
+                        isRemove = True  # Se atender as condições, remove o cometa
                         item = elem
                         # Aumentar a pontuação
                         if player == 1:
@@ -144,7 +144,7 @@ class Game:
             pygame.display.update()
             self.blocks_type.remove(item)
 
-    # Semelhante as destroy, mas aqui perde ponto caso atinga o bloco da cor errada
+    # Semelhante as destroy, mas aqui perde ponto caso atinga o cometa da cor errada
     def to_dodge(self, x, y, player):
         isRemove = False
         for elem in self.blocks_type:
@@ -199,13 +199,14 @@ class Game:
             keys = pygame.key.get_pressed()
 
             # Pegar informações do teclado para movimentar o player 1
+
             # Mover player 1 para a esquerda
             if keys[pygame.K_LEFT] and self.player1_x > 105:
-                self.player1_x -= 5
+                self.player1_x -= 2
             # Mover player 1 para a direita
             if keys[pygame.K_RIGHT] and self.player1_x < 660:
-                self.player1_x += 5
-            # Destruir bloco vermelho
+                self.player1_x += 2
+            # Destruir cometa vermelho
             if keys[pygame.K_DOWN]:
                 self.destroy(self.player1_x + 32, self.player1_y + 32, 1)
 
@@ -216,11 +217,11 @@ class Game:
             if self.player2_x is not None:
                 # Mover player 2 para a esquerda
                 if keys[pygame.K_a] and self.player2_x > 105:
-                    self.player2_x -= 5
+                    self.player2_x -= 2
                 # Mover player 2 para a direita
                 if keys[pygame.K_d] and self.player2_x < 660:
-                    self.player2_x += 5
-                # Destruir bloco azul
+                    self.player2_x += 2
+                # Destruir cometa azul
                 if keys[pygame.K_s]:
                     self.destroy(self.player2_x + 32, self.player2_y + 32, 2)
 
@@ -233,7 +234,7 @@ class Game:
 
             if keys[pygame.K_SPACE]:
                 pause_run = True
-                while pause_run == True:
+                while pause_run:
                     mouse = pygame.mouse.get_pos()  # Determinar onde está o cursor do mouse
                     click = pygame.mouse.get_pressed()  # Saber se houve click do mouse
                     for event in pygame.event.get():
@@ -377,13 +378,14 @@ def help():
 
     pygame.display.update()  # Atualizar a tela
 
+
 # Desenhar os botões na tela inicial
 def draw(main_org):
     global blink
     screen.blit(bg_main, (0, 0))  # Background do menu inicial
 
     # Escrever o Highest Score na tela inicial
-    screen.blit(font60.render("HS: {}".format(highest_score), True, (0, 0, 0)), (590, 585))
+    screen.blit(font60.render("HS: {}".format(highest_score), True, (0, 0, 0)), (50, 610))
 
     # Colocar os botões na tela inicial, alterando cores quando selecionados
     if main_org[1] == 1:
@@ -426,8 +428,7 @@ def main():
             break
         clock.tick(100)  # Controla a velocidade do jogo
 
-    
-    # Atualizar valor do Highest Score no arquivo .txt
+        # Atualizar valor do Highest Score no arquivo .txt
         file = open("hs.txt", "w")
         file.write(str(highest_score))
         file.close()
