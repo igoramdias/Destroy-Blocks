@@ -96,7 +96,7 @@ class Game:
                 self.blocks_type.popleft()
 
             for elem in self.blocks_type:
-                elem[0][1] = elem[0][1] + self.diff * 2
+                elem[0][1] = elem[0][1] + self.diff * 1
 
                 if self.line_org[2 * elem[2]] > 0 and self.line_org[2 * elem[2] + 1] == 1:
                     self.line_org[2 * elem[2]] = self.line_org[2 * elem[2]] - self.diff * 2
@@ -201,10 +201,10 @@ class Game:
             # Pegar informações do teclado para movimentar o player 1
             # Mover player 1 para a esquerda
             if keys[pygame.K_LEFT] and self.player1_x > 105:
-                self.player1_x -= 5
+                self.player1_x -= 2
             # Mover player 1 para a direita
             if keys[pygame.K_RIGHT] and self.player1_x < 660:
-                self.player1_x += 5
+                self.player1_x += 2
             # Destruir bloco vermelho
             if keys[pygame.K_DOWN]:
                 self.destroy(self.player1_x + 32, self.player1_y + 32, 1)
@@ -216,10 +216,10 @@ class Game:
             if self.player2_x is not None:
                 # Mover player 2 para a esquerda
                 if keys[pygame.K_a] and self.player2_x > 105:
-                    self.player2_x -= 5
+                    self.player2_x -= 2
                 # Mover player 2 para a direita
                 if keys[pygame.K_d] and self.player2_x < 660:
-                    self.player2_x += 5
+                    self.player2_x += 2
                 # Destruir bloco azul
                 if keys[pygame.K_s]:
                     self.destroy(self.player2_x + 32, self.player2_y + 32, 2)
