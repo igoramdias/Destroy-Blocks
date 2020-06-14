@@ -41,10 +41,10 @@ pygame.display.set_caption("Destroy Comets")
 clock = pygame.time.Clock()
 
 # Algumas definições de fontes
-font32 = pygame.font.SysFont("Indie Flower", 32)
-font60 = pygame.font.SysFont("Indie Flower", 60)
-font120 = pygame.font.SysFont("Indie Flower", 120)
-font150 = pygame.font.SysFont("Indie Flower", 150)
+font32 = pygame.font.SysFont("Orbit", 32)
+font60 = pygame.font.SysFont("Orbit", 60)
+font120 = pygame.font.SysFont("Orbit", 120)
+font150 = pygame.font.SysFont("Orbit", 150)
 
 # Arquivo .txt para guardar o Highest Score
 file = open("hs.txt", "r")
@@ -70,7 +70,7 @@ class Game:
         self.score_1 = 0
         self.score_2 = 0
         self.diff = diff
-        self.stop = 1000 * 50
+        self.stop = 1000 * 5
 
         # Inicialização para 1 jogador
         if player == 1:
@@ -184,12 +184,12 @@ class Game:
             if self.player2_x is None:
                 screen.blit(background, (0, 0))
                 screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (0, 0, 0)), (325, 0))
-                screen.blit(font60.render("P1: " + "{}".format(self.score_1), True, (255, 0, 0)), (10, 8))
+                screen.blit(font60.render("P1: " + "{}".format(self.score_1), True, (255, 0, 0)), (10, 14))
             else:
                 screen.blit(background, (0, 0))
                 screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (0, 0, 0)), (325, 0))
-                screen.blit(font60.render("P1: " + "{}".format(self.score_1), True, (255, 0, 0)), (10, 8))
-                screen.blit(font60.render("P2: " + "{}".format(self.score_2), True, (0, 0, 255)), (620, 8))
+                screen.blit(font60.render("P1: " + "{}".format(self.score_1), True, (255, 0, 0)), (10, 14))
+                screen.blit(font60.render("P2: " + "{}".format(self.score_2), True, (0, 0, 255)), (620, 14))
 
             # Sair da partida se pressionar o X no canto superior direito
             for event in pygame.event.get():
@@ -260,7 +260,7 @@ class Game:
             # Atualizar a tela
             pygame.display.update()
 
-            if self.score_2 == 0:
+            if self.score_2 is None:
                 screen.blit(fim1, (0, 0))
                 screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (320, 290))
                 # Atualizar a nova pontuação máxima
@@ -278,7 +278,7 @@ class Game:
 
                     screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (570, 570))
 
-                else:
+                elif self.score_2 > self.score_1:
                     screen.blit(fim2A, (0, 0))
                     screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (370, 300))
                     screen.blit(font150.render("{}".format(self.score_2), True, (0, 0, 255)), (370, 400))
@@ -287,6 +287,8 @@ class Game:
                         highest_score = self.score_2
 
                     screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (570, 570))
+
+                else: highest_score = self.score_2
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
