@@ -49,8 +49,8 @@ BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-BUTTON_PRESSED = (0, 0, 119)
-BUTTON_NON_PRESSED = (0, 0, 245)
+BUTTON_PRESSED = (180, 20, 180)
+BUTTON_NON_PRESSED = (0, 0, 0)
 
 
 class Game:
@@ -164,16 +164,17 @@ class Game:
         # Loop enquanto estiver jogando
         while self.stop > (pygame.time.get_ticks() - start) and running:
             screen.fill((0, 0, 0))
-            screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (255, 255, 255)), (300, 20))
 
             # Texto na tela para cada caso (1 ou 2 jogadores)
             if self.player2_x is None:
                 screen.blit(background1, (0, 0))
-                screen.blit(font32.render("P: " + "{}".format(self.score_1), True, (255, 255, 255)), (5, 10))
+                screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (0, 0, 0)), (300, 20))
+                screen.blit(font60.render("P: " + "{}".format(self.score_1), True, (255, 0, 0)), (5, 10))
             else:
                 screen.blit(background2, (0, 0))
-                screen.blit(font32.render("P1: " + "{}".format(self.score_1), True, (255, 255, 255)), (5, 10))
-                screen.blit(font32.render("P2: " + "{}".format(self.score_2), True, (255, 255, 255)), (670, 10))
+                screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (0, 0, 0)), (300, 20))
+                screen.blit(font60.render("P1: " + "{}".format(self.score_1), True, (255, 0, 0)), (5, 10))
+                screen.blit(font60.render("P2: " + "{}".format(self.score_2), True, (0, 0, 255)), (600, 10))
 
             # Sair da partida se pressionar o X no canto superior direito
             for event in pygame.event.get():
