@@ -199,9 +199,9 @@ class Game:
                 self.player1_x += 1
             # Destruir bloco vermelho
             if keys[pygame.K_DOWN]:
-                self.destroy(self.player1_x+32, self.player1_y+32, 1)
+                self.destroy(self.player1_x + 32, self.player1_y + 32, 1)
 
-            self.to_dodge(self.player1_x+32, self.player1_y+32, 1)
+            self.to_dodge(self.player1_x + 32, self.player1_y + 32, 1)
             screen.blit(nave1, (self.player1_x, self.player1_y))
 
             # Pegar informações do teclado para movimentar o player 2
@@ -214,9 +214,9 @@ class Game:
                     self.player2_x += 1
                 # Destruir bloco azul
                 if keys[pygame.K_s]:
-                    self.destroy(self.player2_x+32, self.player2_y+32, 2)
+                    self.destroy(self.player2_x + 32, self.player2_y + 32, 2)
 
-                self.to_dodge(self.player2_x+32, self.player2_y+32, 2)
+                self.to_dodge(self.player2_x + 32, self.player2_y + 32, 2)
                 screen.blit(nave2, (self.player2_x, self.player2_y))
 
             self.blocks()
@@ -225,30 +225,29 @@ class Game:
             clock.tick(200)  # Controla a velocidade do jogo
 
         running = True
-        while running == True:
+        while running:
             # Atualizar a tela
             pygame.display.update()
 
-            if self.score_2 == None:
-                    screen.blit(fim1, (0, 0))
-                    screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (320, 250))
-                    screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (540, 490))
-            else: 
+            if self.score_2 == 0:
+                screen.blit(fim1, (0, 0))
+                screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (320, 290))
+                screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (540, 540))
+            else:
                 if self.score_1 > self.score_2:
                     screen.blit(fim2V, (0, 0))
-                    screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (400, 250))
-                    screen.blit(font150.render("{}".format(self.score_2), True, (0, 0, 255)), (400, 350))
-                    screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (550, 560))
+                    screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (370, 300))
+                    screen.blit(font150.render("{}".format(self.score_2), True, (0, 0, 255)), (370, 400))
+                    screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (570, 570))
                 else:
                     screen.blit(fim2A, (0, 0))
-                    screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (400, 250))
-                    screen.blit(font150.render("{}".format(self.score_2), True, (0, 0, 255)), (400, 350))
-                    screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (550, 560))
+                    screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (370, 300))
+                    screen.blit(font150.render("{}".format(self.score_2), True, (0, 0, 255)), (370, 400))
+                    screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (570, 570))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-
 
         return max(self.score_1, self.score_2)  # Retorna o maior score da partida
 
@@ -337,7 +336,7 @@ def draw(main_org):
     screen.blit(bg_main, (0, 0))  # Background do menu inicial
 
     # Escrever o Highest Score na tela inicial
-    screen.blit(font32.render("HIGHEST SCORE   {}".format(highest_score), True, (0, 0, 0)), (190, 605))
+    screen.blit(font60.render("HIGHEST SCORE:   {}".format(highest_score), True, (0, 0, 0)), (150, 605))
 
     # Colocar os botões na tela inicial, alterando cores quando selecionados
     if main_org[1] == 1:
