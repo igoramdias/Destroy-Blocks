@@ -241,7 +241,7 @@ class Game:
                             pause_run = False
 
                         if 490 > mouse[0] > 250:
-                            print("ENTROU")
+                            # print("ENTROU")
                             if 350 > mouse[1] > 320:
                                 if click[0] == 1:
                                     pause_run = False
