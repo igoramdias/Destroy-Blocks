@@ -40,6 +40,8 @@ clock = pygame.time.Clock()
 # Algumas definições de fontes
 font32 = pygame.font.SysFont("Indie Flower", 32)
 font60 = pygame.font.SysFont("Indie Flower", 60)
+font120 = pygame.font.SysFont("Indie Flower", 120)
+font150 = pygame.font.SysFont("Indie Flower", 150)
 
 # Arquivo .txt para guardar o Highest Score
 file = open("hs.txt", "r")
@@ -64,7 +66,6 @@ class Game:
 
         self.score_1 = 0
         self.score_2 = 0
-        self.radius = 15
         self.stop = time * 1000 * 10
 
         # Inicialização para 1 jogador
@@ -110,10 +111,10 @@ class Game:
             if self.blocks_type and self.blocks_type[-1][1] == line:
                 return
             if color:
-                block = [[115 + 95 * (line - 1), 80, 40, 70], line, color]
+                block = [[115 + 95 * (line - 1), 80, 65, 65], line, color]
                 screen.blit(bloco1, (block[0][0], block[0][1]))
             else:
-                block = [[115 + 95 * (line - 1), 80, 40, 70], line, color]
+                block = [[115 + 95 * (line - 1), 80, 65, 65], line, color]
                 screen.blit(bloco2, (block[0][0], block[0][1]))
 
             self.blocks_type.append(block)  # Insere o bloco na fila
@@ -194,13 +195,13 @@ class Game:
             if keys[pygame.K_LEFT] and self.player1_x > 105:
                 self.player1_x -= 1
             # Mover player 1 para a direita
-            if keys[pygame.K_RIGHT] and self.player1_x < 660 - self.radius:
+            if keys[pygame.K_RIGHT] and self.player1_x < 660:
                 self.player1_x += 1
             # Destruir bloco vermelho
             if keys[pygame.K_DOWN]:
-                self.destroy(self.player1_x, self.player1_y, 1)
+                self.destroy(self.player1_x+32, self.player1_y+32, 1)
 
-            self.to_dodge(self.player1_x, self.player1_y, 1)
+            self.to_dodge(self.player1_x+32, self.player1_y+32, 1)
             screen.blit(nave1, (self.player1_x, self.player1_y))
 
             # Pegar informações do teclado para movimentar o player 2
@@ -209,13 +210,13 @@ class Game:
                 if keys[pygame.K_a] and self.player2_x > 105:
                     self.player2_x -= 1
                 # Mover player 2 para a direita
-                if keys[pygame.K_d] and self.player2_x < 660 - self.radius:
+                if keys[pygame.K_d] and self.player2_x < 660:
                     self.player2_x += 1
                 # Destruir bloco azul
                 if keys[pygame.K_s]:
-                    self.destroy(self.player2_x, self.player2_y, 2)
+                    self.destroy(self.player2_x+32, self.player2_y+32, 2)
 
-                self.to_dodge(self.player2_x, self.player2_y, 2)
+                self.to_dodge(self.player2_x+32, self.player2_y+32, 2)
                 screen.blit(nave2, (self.player2_x, self.player2_y))
 
             self.blocks()
@@ -230,10 +231,19 @@ class Game:
 
             if self.score_2 == 0:
                     screen.blit(fim1, (0, 0))
-            elif self.score_1 > self.score_2:
-                screen.blit(fim2V, (0, 0))
-            else:
-                screen.blit(fim2A, (0, 0))
+                    screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (320, 250))
+                    screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (540, 490))
+            else: 
+                if self.score_1 > self.score_2:
+                    screen.blit(fim2V, (0, 0))
+                    screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (400, 250))
+                    screen.blit(font150.render("{}".format(self.score_2), True, (0, 0, 255)), (400, 350))
+                    screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (550, 560))
+                else:
+                    screen.blit(fim2A, (0, 0))
+                    screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (400, 250))
+                    screen.blit(font150.render("{}".format(self.score_2), True, (0, 0, 255)), (400, 350))
+                    screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (550, 560))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
