@@ -70,7 +70,7 @@ class Game:
         self.score_1 = 0
         self.score_2 = 0
         self.diff = diff
-        self.stop = 1000 * 5
+        self.stop = 1000 * 60
 
         # Inicialização para 1 jogador
         if player == 1:
@@ -260,7 +260,7 @@ class Game:
             # Atualizar a tela
             pygame.display.update()
 
-            if self.score_2 is None:
+            if self.score_2 == 0:
                 screen.blit(fim1, (0, 0))
                 screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (320, 290))
                 # Atualizar a nova pontuação máxima
@@ -288,7 +288,8 @@ class Game:
 
                     screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (570, 570))
 
-                else: highest_score = self.score_2
+                else:
+                    highest_score = self.score_2
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
