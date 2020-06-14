@@ -20,6 +20,9 @@ background = pygame.image.load('gamerun.png')  # Background
 fim1 = pygame.image.load('telafinal1.png')  # Tela final 1 player
 fim2V = pygame.image.load('telafinal2V.png')  # Tela final player red win
 fim2A = pygame.image.load('telafinal2A.png')  # Tela final player blue win
+pause = pygame.image.load('telapause.png')
+spark = pygame.image.load('spark.png')
+sos = pygame.image.load('ajuda.png')
 
 # Definindo objetos do jogo
 nave1 = pygame.image.load('naveVermelha.png')  # Nave player 1
@@ -58,7 +61,7 @@ BUTTON_NON_PRESSED = (0, 0, 0)
 
 
 class Game:
-    def __init__(self, player, time):
+    def __init__(self, player, diff):
         self.blocks_type = deque()
         self.line_org = [0, 0, 0, 0]
         # Posição 0: Relacionado com a cor vermelha
@@ -66,7 +69,8 @@ class Game:
 
         self.score_1 = 0
         self.score_2 = 0
-        self.stop = time * 1000 * 10
+        self.diff = diff
+        self.stop = 1000 * 50
 
         # Inicialização para 1 jogador
         if player == 1:
@@ -92,17 +96,17 @@ class Game:
                 self.blocks_type.popleft()
 
             for elem in self.blocks_type:
-                elem[0][1] = elem[0][1] + 1
+                elem[0][1] = elem[0][1] + self.diff*2
 
                 if self.line_org[2 * elem[2]] > 0 and self.line_org[2 * elem[2] + 1] == 1:
-                    self.line_org[2 * elem[2]] = self.line_org[2 * elem[2]] - 1
+                    self.line_org[2 * elem[2]] = self.line_org[2 * elem[2]] - self.diff*2 
                     self.line_org[2 * elem[2] + 1] = 0
 
                 if elem[2]:
                     screen.blit(bloco1, (elem[0][0], elem[0][1]))
                 else:
                     screen.blit(bloco2, (elem[0][0], elem[0][1]))
-
+        
         line = random.randrange(1, 7)  # Escolher randomicamente uma das 6 colunas onde surgem os blocos
         color = random.randrange(2)  # Escolher randomicamente cor Azul ou Vermelha para o bloco
 
@@ -136,6 +140,8 @@ class Game:
                             self.score_2 = self.score_2 + 1
                         break
         if isRemove:
+            screen.blit(spark, (item[0][0], item[0][1]))
+            pygame.display.update()
             self.blocks_type.remove(item)
 
     # Semelhante as destroy, mas aqui perde ponto caso atinga o bloco da cor errada
@@ -154,6 +160,8 @@ class Game:
                             self.score_2 = self.score_2 - 1
                         break
         if isRemove:
+            screen.blit(spark, (item[0][0], item[0][1]))
+            pygame.display.update()
             self.blocks_type.remove(item)
 
     # Mostrar quanto tempo falta para o fim da partida em formato de um retângulo
@@ -193,10 +201,10 @@ class Game:
             # Pegar informações do teclado para movimentar o player 1
             # Mover player 1 para a esquerda
             if keys[pygame.K_LEFT] and self.player1_x > 105:
-                self.player1_x -= 1
+                self.player1_x -= 5
             # Mover player 1 para a direita
             if keys[pygame.K_RIGHT] and self.player1_x < 660:
-                self.player1_x += 1
+                self.player1_x += 5
             # Destruir bloco vermelho
             if keys[pygame.K_DOWN]:
                 self.destroy(self.player1_x + 32, self.player1_y + 32, 1)
@@ -222,7 +230,32 @@ class Game:
             self.blocks()
             self.timer(start)
             pygame.display.update()
-            clock.tick(200)  # Controla a velocidade do jogo
+
+            if keys[pygame.K_SPACE]:
+                mouse = pygame.mouse.get_pos()  # Determinar onde está o cursor do mouse
+                click = pygame.mouse.get_pressed()  # Saber se houve click do mouse
+                pause_run = True
+                while pause_run == True:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pause_run = False
+                        
+                        if 490 > mouse[0] > 250:
+                            print("ENTROU")
+                            if 350 > mouse[1] > 320:
+                                if click[0] == 1:
+                                    pause_run = False
+                        
+                        if 450 > mouse[0] > 300:
+                            if 435 > mouse[1] > 400:
+                                if click[0] == 1:
+                                    pause_run = False
+                                    running = False
+
+                    pygame.display.update()
+                    screen.blit(pause, (0, 0))
+
+            clock.tick(50)  # Controla a velocidade do jogo
 
         running = True
         while running:
@@ -290,7 +323,7 @@ def button(main_org):
             if 320 + 60 > mouse[1] > 320:
                 if click[0] == 1:
                     if main_org[3] == 0:
-                        main_org[2] = 1
+                        main_org[2] = 2
                         main_org[3] = 1
                         break
                     if main_org[3] == 1:
@@ -300,28 +333,24 @@ def button(main_org):
             if 400 + 60 > mouse[1] > 400:
                 if click[0] == 1:
                     if main_org[3] == 0:
-                        main_org[2] = 2
+                        main_org[2] = 1
                         main_org[3] = 1
                         break
                     if main_org[3] == 1:
                         main_org[2] = 0
                         main_org[3] = 0
                         break
+        
+        if 460 > mouse[0] > 315:
+            if 660> mouse[1] > 590:
+                if click[0] == 1:
+                    help()
 
         # Botão GO!: Dar início ao jogo se as opções de jogadores e tempo tiverem sido escolhidas
         if main_org[1] == 1 and main_org[3] == 1:
             if 345 + 60 > mouse[0] > 345 and 595 + 60 > mouse[1] > 535:
                 if click[0] == 1:
-                    if main_org[0] == 1:
-                        player = 1
-                    else:
-                        player = 2
-                    if main_org[2] == 1:
-                        time = 1
-                    else:
-                        time = 2
-
-                    game = Game(player, time)
+                    game = Game(main_org[0], main_org[2])
                     score = game.run()
 
                     # Atualizar a nova pontuação máxima
@@ -330,13 +359,25 @@ def button(main_org):
 
     return True
 
+def help():
+    screen.blit(sos,(0,0))
+    running = True
+    while running:
+        # Atualizar a tela
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+    pygame.display.update()  # Atualizar a tela
+    pygame.display.flip()
 
 # Desenhar os botões na tela inicial
 def draw(main_org):
     screen.blit(bg_main, (0, 0))  # Background do menu inicial
 
     # Escrever o Highest Score na tela inicial
-    screen.blit(font60.render("HIGHEST SCORE:   {}".format(highest_score), True, (0, 0, 0)), (150, 605))
+    #screen.blit(font60.render("HIGHEST SCORE:   {}".format(highest_score), True, (0, 0, 0)), (150, 605))
 
     # Colocar os botões na tela inicial, alterando cores quando selecionados
     if main_org[1] == 1:
@@ -353,11 +394,12 @@ def draw(main_org):
 
     if main_org[3] == 1:
         if main_org[2] == 1:
-            pygame.draw.circle(screen, BUTTON_PRESSED, (595, 350), 30)
-            pygame.draw.circle(screen, BUTTON_NON_PRESSED, (595, 430), 30)
-        if main_org[2] == 2:
             pygame.draw.circle(screen, BUTTON_NON_PRESSED, (595, 350), 30)
             pygame.draw.circle(screen, BUTTON_PRESSED, (595, 430), 30)
+        if main_org[2] == 2:
+            pygame.draw.circle(screen, BUTTON_PRESSED, (595, 350), 30)
+            pygame.draw.circle(screen, BUTTON_NON_PRESSED, (595, 430), 30)
+            
 
     if main_org[3] == 0:
         pygame.draw.circle(screen, BUTTON_NON_PRESSED, (595, 350), 30)
