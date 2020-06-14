@@ -229,7 +229,7 @@ class Game:
             # Atualizar a tela
             pygame.display.update()
 
-            if self.score_2 == 0:
+            if self.score_2 == None:
                     screen.blit(fim1, (0, 0))
                     screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (320, 250))
                     screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (540, 490))
