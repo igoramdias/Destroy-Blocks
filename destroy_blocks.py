@@ -40,6 +40,8 @@ clock = pygame.time.Clock()
 # Algumas definições de fontes
 font32 = pygame.font.SysFont("Indie Flower", 32)
 font60 = pygame.font.SysFont("Indie Flower", 60)
+font120 = pygame.font.SysFont("Indie Flower", 120)
+font150 = pygame.font.SysFont("Indie Flower", 150)
 
 # Arquivo .txt para guardar o Highest Score
 file = open("hs.txt", "r")
@@ -308,12 +310,18 @@ def button(main_org):
 
                         if game.score_2 == 0:
                             screen.blit(fim1, (0, 0))
+                            screen.blit(font150.render("{}".format(game.score_1), True, (255, 0, 0)), (320, 300))
+                            screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (540, 540))
                         elif game.score_1 > game.score_2:
                             screen.blit(fim2V, (0, 0))
+                            screen.blit(font150.render("{}".format(game.score_1), True, (255, 0, 0)), (400, 300))
+                            screen.blit(font150.render("{}".format(game.score_2), True, (0, 0, 255)), (400, 400))
+                            screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (550, 570))
                         else:
                             screen.blit(fim2A, (0, 0))
-
-
+                            screen.blit(font150.render("{}".format(game.score_1), True, (255, 0, 0)), (400, 300))
+                            screen.blit(font150.render("{}".format(game.score_2), True, (0, 0, 255)), (400, 400))
+                            screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (550, 570))
 
     return True
 
