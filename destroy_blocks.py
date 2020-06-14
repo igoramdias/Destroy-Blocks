@@ -347,7 +347,8 @@ def button(main_org):
                         main_org[2] = 0
                         main_org[3] = 0
                         break
-
+        
+        # Botão Help: Encaminha para a página de ajuda para jogar
         if 460 > mouse[0] > 315:
             if 660 > mouse[1] > 590:
                 if click[0] == 1:
