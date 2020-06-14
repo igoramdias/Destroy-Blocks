@@ -166,9 +166,9 @@ class Game:
 
     # Mostrar quanto tempo falta para o fim da partida em formato de um retângulo
     def timer(self, start):
-        y_time = (1 - (self.stop - (pygame.time.get_ticks() - start)) / self.stop) * 200  # Tempo restante
-        pygame.draw.rect(screen, WHITE, (280, 68, 200, 20))
-        pygame.draw.rect(screen, BLACK, (280, 68, y_time, 20))
+        x_time = (1 - (self.stop - (pygame.time.get_ticks() - start)) / self.stop) * 225  # Tempo restante
+        pygame.draw.rect(screen, WHITE, (280, 68, 225, 20))
+        pygame.draw.rect(screen, BLACK, (280, 68, x_time, 20))
         # Os 4 valores representam, respectivamente: x da origem, y da origem, comprimento e altura do retângulo
 
     def run(self):
@@ -216,10 +216,10 @@ class Game:
             if self.player2_x is not None:
                 # Mover player 2 para a esquerda
                 if keys[pygame.K_a] and self.player2_x > 105:
-                    self.player2_x -= 1
+                    self.player2_x -= 5
                 # Mover player 2 para a direita
                 if keys[pygame.K_d] and self.player2_x < 660:
-                    self.player2_x += 1
+                    self.player2_x += 5
                 # Destruir bloco azul
                 if keys[pygame.K_s]:
                     self.destroy(self.player2_x + 32, self.player2_y + 32, 2)
