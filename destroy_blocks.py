@@ -15,20 +15,20 @@ os.environ["SDL_VIDEO_CENTERED"] = "1"
 pygame.init()
 
 # Definir backgrounds do jogo
-bg_main = pygame.image.load('main.png')  # Menu
-background = pygame.image.load('gamerun.png')  # Background
-fim1 = pygame.image.load('telafinal1.png')  # Tela final 1 player
-fim2V = pygame.image.load('telafinal2V.png')  # Tela final player red win
-fim2A = pygame.image.load('telafinal2A.png')  # Tela final player blue win
-pause = pygame.image.load('telapause.png')  # Tela de pausa
-spark = pygame.image.load('spark.png')  # Imagem de quando colide
-sos = pygame.image.load('ajuda.png')  # Tela de ajuda
+bg_main = pygame.image.load('Imagens/main.png')  # Menu
+background = pygame.image.load('Imagens/gamerun.png')  # Background
+fim1 = pygame.image.load('Imagens/telafinal1.png')  # Tela final 1 player
+fim2V = pygame.image.load('Imagens/telafinal2V.png')  # Tela final player red win
+fim2A = pygame.image.load('Imagens/telafinal2A.png')  # Tela final player blue win
+pause = pygame.image.load('Imagens/telapause.png')  # Tela de pausa
+spark = pygame.image.load('Imagens/spark.png')  # Imagem de quando colide
+sos = pygame.image.load('Imagens/ajuda.png')  # Tela de ajuda
 
 # Definindo objetos do jogo
-nave1 = pygame.image.load('naveVermelha.png')  # Nave player 1
-nave2 = pygame.image.load('naveAzul.png')  # Nave player 2
-bloco1 = pygame.image.load('cometaVermelho.png')  # Cometa vermelho
-bloco2 = pygame.image.load('cometaAzul.png')  # Cometa azul
+nave1 = pygame.image.load('Imagens/naveVermelha.png')  # Nave player 1
+nave2 = pygame.image.load('Imagens/naveAzul.png')  # Nave player 2
+bloco1 = pygame.image.load('Imagens/cometaVermelho.png')  # Cometa vermelho
+bloco2 = pygame.image.load('Imagens/cometaAzul.png')  # Cometa azul
 
 # Definir largura e comprimento da tela do jogo
 (width, height) = (750, 700)
