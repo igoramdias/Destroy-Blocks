@@ -233,7 +233,7 @@ class Game:
 
             if keys[pygame.K_SPACE]:
                 pause_run = True
-                while pause_run == True:
+                while pause_run:
                     mouse = pygame.mouse.get_pos()  # Determinar onde está o cursor do mouse
                     click = pygame.mouse.get_pressed()  # Saber se houve click do mouse
                     for event in pygame.event.get():
@@ -376,13 +376,14 @@ def help():
 
     pygame.display.update()  # Atualizar a tela
 
+
 # Desenhar os botões na tela inicial
 def draw(main_org):
     global blink
     screen.blit(bg_main, (0, 0))  # Background do menu inicial
 
     # Escrever o Highest Score na tela inicial
-    screen.blit(font60.render("HS: {}".format(highest_score), True, (0, 0, 0)), (590, 585))
+    screen.blit(font60.render("HS: {}".format(highest_score), True, (0, 0, 0)), (50, 610))
 
     # Colocar os botões na tela inicial, alterando cores quando selecionados
     if main_org[1] == 1:
@@ -425,8 +426,7 @@ def main():
             break
         clock.tick(100)  # Controla a velocidade do jogo
 
-    
-    # Atualizar valor do Highest Score no arquivo .txt
+        # Atualizar valor do Highest Score no arquivo .txt
         file = open("hs.txt", "w")
         file.write(str(highest_score))
         file.close()
