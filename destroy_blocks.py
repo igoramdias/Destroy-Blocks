@@ -331,7 +331,7 @@ def draw(main_org):
     screen.blit(bg_main, (0, 0))  # Background do menu inicial
 
     # Escrever o Highest Score na tela inicial
-    screen.blit(font60.render("HIGHEST SCORE:   {}".format(highest_score), True, (0, 0, 0)), (150, 610))
+    screen.blit(font60.render("HIGHEST SCORE:   {}".format(highest_score), True, (0, 0, 0)), (140, 610))
 
     # Colocar os botões na tela inicial, alterando cores quando selecionados
     if main_org[1] == 1:
