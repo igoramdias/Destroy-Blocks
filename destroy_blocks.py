@@ -16,7 +16,14 @@ pygame.init()
 
 # Definir backgrounds do jogo
 bg_main = pygame.image.load('main.png')  # Menu
-background = pygame.image.load('8320.png')  # Jogo
+background1 = pygame.image.load('gamerun1.png')  # Background 1 player
+background2 = pygame.image.load('gamerun2.png')  # Background 2 players
+
+# Definindo objetos do jogo
+nave1 = pygame.image.load('naveVermelha.png')  # Nave 1 player
+nave2 = pygame.image.load('naveAzul.png')  # Nave 2 player
+bloco1 = pygame.image.load('cometaVermelho.png')  # Nave 1 player
+bloco2 = pygame.image.load('cometaAzul.png')  # Nave 2 player
 
 # Definir largura e comprimento da tela do jogo
 (width, height) = (750, 700)
@@ -42,8 +49,8 @@ BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-BUTTON_PRESSED = (230, 194, 62)
-BUTTON_NON_PRESSED = (255, 235, 161)
+BUTTON_PRESSED = (0, 0, 119)
+BUTTON_NON_PRESSED = (0, 0, 245)
 
 
 class Game:
@@ -157,15 +164,16 @@ class Game:
         # Loop enquanto estiver jogando
         while self.stop > (pygame.time.get_ticks() - start) and running:
             screen.fill((0, 0, 0))
-            screen.blit(background, (0, 0))
             screen.blit(font60.render("HS: " + "{}".format(highest_score), True, (255, 255, 255)), (300, 20))
 
             # Texto na tela para cada caso (1 ou 2 jogadores)
             if self.player2_x is None:
-                screen.blit(font60.render("P: " + "{}".format(self.score_1), True, (255, 0, 0)), (30, 20))
+                screen.blit(background1, (0, 0))
+                screen.blit(font32.render("P: " + "{}".format(self.score_1), True, (255, 255, 255)), (5, 10))
             else:
-                screen.blit(font60.render("P1: " + "{}".format(self.score_1), True, (255, 0, 0)), (30, 20))
-                screen.blit(font60.render("P2: " + "{}".format(self.score_2), True, (0, 0, 255)), (600, 20))
+                screen.blit(background2, (0, 0))
+                screen.blit(font32.render("P1: " + "{}".format(self.score_1), True, (255, 255, 255)), (5, 10))
+                screen.blit(font32.render("P2: " + "{}".format(self.score_2), True, (255, 255, 255)), (670, 10))
 
             # Sair da partida se pressionar o X no canto superior direito
             for event in pygame.event.get():
@@ -187,6 +195,7 @@ class Game:
 
             self.to_dodge(self.player1_x, self.player1_y, 1)
             pygame.draw.circle(screen, RED, (self.player1_x, self.player1_y), self.radius)
+            # screen.blit(nave1, (self.player1_x, self.player1_y))
 
             # Pegar informações do teclado para movimentar o player 2
             if self.player2_x is not None:
@@ -202,6 +211,7 @@ class Game:
 
                 self.to_dodge(self.player2_x, self.player2_y, 2)
                 pygame.draw.circle(screen, BLUE, (self.player2_x, self.player2_y), self.radius)
+                # screen.blit(nave2, (self.player1_x, self.player1_y))
 
             self.blocks()
             self.timer(start)
@@ -294,7 +304,7 @@ def draw(main_org):
     screen.blit(bg_main, (0, 0))  # Background do menu inicial
 
     # Escrever o Highest Score na tela inicial
-    screen.blit(font32.render("HIGHEST SCORE   {}".format(highest_score), True, (0, 0, 0)), (150, 620))
+    screen.blit(font32.render("HIGHEST SCORE   {}".format(highest_score), True, (0, 0, 0)), (210, 600))
 
     # Colocar os botões na tela inicial, alterando cores quando selecionados
     if main_org[1] == 1:
