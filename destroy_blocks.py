@@ -122,7 +122,7 @@ class Game:
                 screen.blit(bloco2, (block[0][0], block[0][1]))
 
             self.blocks_type.append(block)  # Insere o bloco na fila
-            self.line_org[2 * color] = 100
+            self.line_org[2 * color] = 200
 
     # Destruir blocos se o centro (x, y) do player estiver na região delimitada pelo bloco
     def destroy(self, x, y, player):
@@ -232,16 +232,15 @@ class Game:
             pygame.display.update()
 
             if keys[pygame.K_SPACE]:
-                mouse = pygame.mouse.get_pos()  # Determinar onde está o cursor do mouse
-                click = pygame.mouse.get_pressed()  # Saber se houve click do mouse
                 pause_run = True
                 while pause_run == True:
+                    mouse = pygame.mouse.get_pos()  # Determinar onde está o cursor do mouse
+                    click = pygame.mouse.get_pressed()  # Saber se houve click do mouse
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             pause_run = False
 
                         if 490 > mouse[0] > 250:
-                            print("ENTROU")
                             if 350 > mouse[1] > 320:
                                 if click[0] == 1:
                                     pause_run = False
@@ -254,8 +253,6 @@ class Game:
 
                     pygame.display.update()
                     screen.blit(pause, (0, 0))
-
-            clock.tick(50)  # Controla a velocidade do jogo
 
         running = True
         while running:
@@ -293,8 +290,6 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-
-        return max(self.score_1, self.score_2)  # Retorna o maior score da partida
 
 
 # Definir botões na tela inicial para configurar o jogo (jogadores e tempo de jogo)
@@ -363,11 +358,7 @@ def button(main_org):
             if 345 + 60 > mouse[0] > 345 and 595 + 60 > mouse[1] > 535:
                 if click[0] == 1:
                     game = Game(main_org[0], main_org[2])
-                    score = game.run()
-
-                    # Atualizar a nova pontuação máxima
-                    if score > highest_score:
-                        highest_score = score
+                    game.run()
 
     return True
 
@@ -384,15 +375,14 @@ def help():
                 running = False
 
     pygame.display.update()  # Atualizar a tela
-    pygame.display.flip()
-
 
 # Desenhar os botões na tela inicial
 def draw(main_org):
+    global blink
     screen.blit(bg_main, (0, 0))  # Background do menu inicial
 
     # Escrever o Highest Score na tela inicial
-    # screen.blit(font60.render("HIGHEST SCORE:   {}".format(highest_score), True, (0, 0, 0)), (150, 605))
+    screen.blit(font60.render("HS: {}".format(highest_score), True, (0, 0, 0)), (590, 585))
 
     # Colocar os botões na tela inicial, alterando cores quando selecionados
     if main_org[1] == 1:
@@ -420,7 +410,6 @@ def draw(main_org):
         pygame.draw.circle(screen, BUTTON_NON_PRESSED, (595, 430), 30)
 
     pygame.display.update()  # Atualizar a tela
-    pygame.display.flip()
 
 
 def main():
@@ -431,14 +420,16 @@ def main():
     # Posição 3: indica se o botão de seleção de tempo de jogo está apertado
 
     while True:
+        draw(main_org)
         if not button(main_org):
             break
+        clock.tick(100)  # Controla a velocidade do jogo
 
-        # Atualizar valor do Highest Score no arquivo .txt
+    
+    # Atualizar valor do Highest Score no arquivo .txt
         file = open("hs.txt", "w")
         file.write(str(highest_score))
         file.close()
-        draw(main_org)
 
 
 if __name__ == "__main__":
