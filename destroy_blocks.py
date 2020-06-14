@@ -8,8 +8,8 @@ from collections import deque
 os.chdir(os.path.dirname(__file__))
 
 # Centralizar a janela do jogo na tela do computador
-if sys.platform in ["win32", "win64"]:
-    os.environ["SDL_VIDEO_CENTERED"] = "1"
+# if sys.platform in ["win32", "win64"]:
+os.environ["SDL_VIDEO_CENTERED"] = "1"
 
 # Inicializar PyGame
 pygame.init()
