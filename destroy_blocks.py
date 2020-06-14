@@ -1,7 +1,7 @@
 import os
 import pygame
 import random
-import sys
+# import sys
 import traceback
 from collections import deque
 
