@@ -20,9 +20,9 @@ background = pygame.image.load('gamerun.png')  # Background
 fim1 = pygame.image.load('telafinal1.png')  # Tela final 1 player
 fim2V = pygame.image.load('telafinal2V.png')  # Tela final player red win
 fim2A = pygame.image.load('telafinal2A.png')  # Tela final player blue win
-pause = pygame.image.load('telapause.png')
-spark = pygame.image.load('spark.png')
-sos = pygame.image.load('ajuda.png')
+pause = pygame.image.load('telapause.png')  # Tela de pausa
+spark = pygame.image.load('spark.png')  # Imagem de quando colide
+sos = pygame.image.load('ajuda.png')  # Tela de ajuda
 
 # Definindo objetos do jogo
 nave1 = pygame.image.load('naveVermelha.png')  # Nave player 1
@@ -96,17 +96,17 @@ class Game:
                 self.blocks_type.popleft()
 
             for elem in self.blocks_type:
-                elem[0][1] = elem[0][1] + self.diff*2
+                elem[0][1] = elem[0][1] + self.diff * 2
 
                 if self.line_org[2 * elem[2]] > 0 and self.line_org[2 * elem[2] + 1] == 1:
-                    self.line_org[2 * elem[2]] = self.line_org[2 * elem[2]] - self.diff*2 
+                    self.line_org[2 * elem[2]] = self.line_org[2 * elem[2]] - self.diff * 2
                     self.line_org[2 * elem[2] + 1] = 0
 
                 if elem[2]:
                     screen.blit(bloco1, (elem[0][0], elem[0][1]))
                 else:
                     screen.blit(bloco2, (elem[0][0], elem[0][1]))
-        
+
         line = random.randrange(1, 7)  # Escolher randomicamente uma das 6 colunas onde surgem os blocos
         color = random.randrange(2)  # Escolher randomicamente cor Azul ou Vermelha para o bloco
 
@@ -239,13 +239,13 @@ class Game:
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             pause_run = False
-                        
+
                         if 490 > mouse[0] > 250:
                             print("ENTROU")
                             if 350 > mouse[1] > 320:
                                 if click[0] == 1:
                                     pause_run = False
-                        
+
                         if 450 > mouse[0] > 300:
                             if 435 > mouse[1] > 400:
                                 if click[0] == 1:
@@ -265,17 +265,29 @@ class Game:
             if self.score_2 == 0:
                 screen.blit(fim1, (0, 0))
                 screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (320, 290))
+                # Atualizar a nova pontuação máxima
+                if self.score_1 > highest_score:
+                    highest_score = self.score_1
                 screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (540, 540))
             else:
                 if self.score_1 > self.score_2:
                     screen.blit(fim2V, (0, 0))
                     screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (370, 300))
                     screen.blit(font150.render("{}".format(self.score_2), True, (0, 0, 255)), (370, 400))
+                    # Atualizar a nova pontuação máxima
+                    if self.score_1 > highest_score:
+                        highest_score = self.score_1
+
                     screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (570, 570))
+
                 else:
                     screen.blit(fim2A, (0, 0))
                     screen.blit(font150.render("{}".format(self.score_1), True, (255, 0, 0)), (370, 300))
                     screen.blit(font150.render("{}".format(self.score_2), True, (0, 0, 255)), (370, 400))
+                    # Atualizar a nova pontuação máxima
+                    if self.score_2 > highest_score:
+                        highest_score = self.score_2
+
                     screen.blit(font120.render("{}".format(highest_score), True, (255, 255, 255)), (570, 570))
 
             for event in pygame.event.get():
@@ -340,9 +352,9 @@ def button(main_org):
                         main_org[2] = 0
                         main_org[3] = 0
                         break
-        
+
         if 460 > mouse[0] > 315:
-            if 660> mouse[1] > 590:
+            if 660 > mouse[1] > 590:
                 if click[0] == 1:
                     help()
 
@@ -359,8 +371,9 @@ def button(main_org):
 
     return True
 
+
 def help():
-    screen.blit(sos,(0,0))
+    screen.blit(sos, (0, 0))
     running = True
     while running:
         # Atualizar a tela
@@ -369,15 +382,17 @@ def help():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
     pygame.display.update()  # Atualizar a tela
     pygame.display.flip()
+
 
 # Desenhar os botões na tela inicial
 def draw(main_org):
     screen.blit(bg_main, (0, 0))  # Background do menu inicial
 
     # Escrever o Highest Score na tela inicial
-    #screen.blit(font60.render("HIGHEST SCORE:   {}".format(highest_score), True, (0, 0, 0)), (150, 605))
+    # screen.blit(font60.render("HIGHEST SCORE:   {}".format(highest_score), True, (0, 0, 0)), (150, 605))
 
     # Colocar os botões na tela inicial, alterando cores quando selecionados
     if main_org[1] == 1:
@@ -399,7 +414,6 @@ def draw(main_org):
         if main_org[2] == 2:
             pygame.draw.circle(screen, BUTTON_PRESSED, (595, 350), 30)
             pygame.draw.circle(screen, BUTTON_NON_PRESSED, (595, 430), 30)
-            
 
     if main_org[3] == 0:
         pygame.draw.circle(screen, BUTTON_NON_PRESSED, (595, 350), 30)
