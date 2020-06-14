@@ -20,10 +20,10 @@ background1 = pygame.image.load('gamerun1.png')  # Background 1 player
 background2 = pygame.image.load('gamerun2.png')  # Background 2 players
 
 # Definindo objetos do jogo
-nave1 = pygame.image.load('naveVermelha.png')  # Nave 1 player
-nave2 = pygame.image.load('naveAzul.png')  # Nave 2 player
-bloco1 = pygame.image.load('cometaVermelho.png')  # Nave 1 player
-bloco2 = pygame.image.load('cometaAzul.png')  # Nave 2 player
+nave1 = pygame.image.load('naveVermelha.png')  # Nave player 1
+nave2 = pygame.image.load('naveAzul.png')  # Nave player 2
+bloco1 = pygame.image.load('cometaVermelho.png')  # Cometa vermelho
+bloco2 = pygame.image.load('cometaAzul.png')  # Cometa azul
 
 # Definir largura e comprimento da tela do jogo
 (width, height) = (750, 700)
