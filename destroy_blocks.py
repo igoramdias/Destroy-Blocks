@@ -35,7 +35,7 @@ bloco2 = pygame.image.load('cometaAzul.png')  # Cometa azul
 screen = pygame.display.set_mode((width, height))
 
 # Definir nome do jogo
-pygame.display.set_caption("Destroy Blocks")
+pygame.display.set_caption("Destroy Comets")
 
 # Controlar o tempo de jogo e o FPS
 clock = pygame.time.Clock()
