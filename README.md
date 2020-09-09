@@ -1,2 +1,2 @@
 # Destroy-Blocks
-Projeto da matéria de CES22 para o primeiro bimestre
+Projeto da matéria de Programação Orientada à Objetos (CES 22) para a construção de um jogo python.
